@@ -1,6 +1,0 @@
-{
-    "url": "http://localhost",
-    "admin_url": "http://localhost/baser/admin",
-    "login_email": "admin@example.com",
-    "login_password": "password"
-}
