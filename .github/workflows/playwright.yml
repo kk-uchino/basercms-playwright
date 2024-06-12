@@ -1,0 +1,47 @@
+name: Playwright Tests
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'baserproject/basercms'
+          ref: 'dev-5'
+          path: 'basercms'
+      - name: docker compose
+        run: |
+          cd basercms/docker
+          cp docker-compose.yml.default docker-compose.yml
+          sed -ie "s/XDEBUG_MODE: \"debug\"/XDEBUG_MODE: \"off\"/g" docker-compose.yml
+          docker compose up -d
+      - name: Sleep for 20 seconds
+        run: sleep 20
+      - name: basercms install
+        run: |
+          docker exec bc-php composer install --no-plugins
+          docker exec bc-php bin/cake setup install
+          docker exec bc-php bin/cake install http://localhost admin@example.com password basercms --host bc-db --username root --password root
+      - name: Edit .env
+        run: |
+          sed -ie "s/ADMIN_SSL=\"true\"/ADMIN_SSL=\"false\"/g" basercms/config/.env
+
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

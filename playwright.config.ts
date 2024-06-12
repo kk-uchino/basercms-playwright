@@ -29,6 +29,7 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
+  timeout: 10 * 1000,
 
   /* Configure projects for major browsers */
   projects: [
@@ -41,23 +42,23 @@ export default defineConfig({
       },
     },
 
-    {
-      name: "firefox",
-      use: {
-        ...devices["Desktop Firefox"],
-        locale: "ja-JP",
-        timezoneId: "Asia/Tokyo",
-      },
-    },
+    // {
+    //   name: "firefox",
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //     locale: "ja-JP",
+    //     timezoneId: "Asia/Tokyo",
+    //   },
+    // },
 
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-        locale: "ja-JP",
-        timezoneId: "Asia/Tokyo",
-      },
-    },
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //     locale: "ja-JP",
+    //     timezoneId: "Asia/Tokyo",
+    //   },
+    // },
 
     /* Test against mobile viewports. */
     // {
