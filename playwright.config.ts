@@ -34,12 +34,44 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: "setup",
+      testMatch: /.*\.setup\.ts/,
+      use: {
+        locale: "ja-JP",
+        timezoneId: "Asia/Tokyo",
+      },
+    },
+
+    {
+      name: "front",
+      testMatch: /front\/.*\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         locale: "ja-JP",
         timezoneId: "Asia/Tokyo",
       },
+    },
+
+    {
+      name: "admin_no_auth",
+      testMatch: /admin\/login\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        locale: "ja-JP",
+        timezoneId: "Asia/Tokyo",
+      },
+    },
+
+    {
+      name: "admin",
+      testMatch: /admin\/auth\/.*\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        locale: "ja-JP",
+        timezoneId: "Asia/Tokyo",
+        storageState: process.env.AUTH_COOKIE_PATH,
+      },
+      dependencies: ["setup"],
     },
 
     // {
